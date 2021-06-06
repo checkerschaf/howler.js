@@ -2252,6 +2252,7 @@
         self._node.src = parent._src;
         self._node.preload = parent._preload === true ? 'auto' : parent._preload;
         self._node.volume = volume * Howler.volume();
+        self._node.crossOrigin = 'anonymous';
 
         // Begin loading the source.
         self._node.load();
