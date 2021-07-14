@@ -52,6 +52,7 @@ Tested in the following browsers/versions:
   * [Options](#options-1)
   * [Methods](#methods-1)
   * [Global Methods](#global-methods-1)
+* [Group Playback](#group-playback)
 * [Mobile Playback](#mobilechrome-playback)
 * [Dolby Audio Playback](#dolby-audio-playback)
 * [Facebook Instant Games](#facebook-instant-games)
@@ -88,6 +89,13 @@ import {Howl, Howler} from 'howler';
 ```javascript
 const {Howl, Howler} = require('howler');
 ```
+
+Included distribution files:
+
+* **howler**: This is the default and fully bundled source the includes `howler.core` and `howler.spatial`. It inclues all functionality that howler comes with.
+* **howler.core**: This includes only the core functionality that aims to create parity between Web Audio and HTML5 Audio. It doesn't include any of the spatial/stereo audio functionality.
+* **howler.spatial**: This is a plugin that adds spatial/stereo audio functionality. It requires `howler.core` to operate as it is simply an add-on to the core.
+
 
 ### Examples
 
@@ -248,6 +256,12 @@ new Howl({
 Fires when the sound is loaded.
 #### onloaderror `Function`
 Fires when the sound is unable to load. The first parameter is the ID of the sound (if it exists) and the second is the error message/code.
+
+The load error codes are [defined in the spec](http://dev.w3.org/html5/spec-author-view/spec.html#mediaerror):
+* **1** - The fetching process for the media resource was aborted by the user agent at the user's request.
+* **2** - A network error of some description caused the user agent to stop fetching the media resource, after the resource was established to be usable.
+* **3** - An error of some description occured while decoding the media resource, after the resource was established to be usable.
+* **4** - The media resource indicated by the src attribute or assigned media provider object was not suitable.
 #### onplayerror `Function`
 Fires when the sound is unable to play. The first parameter is the ID of the sound and the second is the error message/code.
 #### onplay `Function`
@@ -463,6 +477,32 @@ Get/set the direction the listener is pointing in the 3D cartesian space. A fron
 * **xUp**: `Number` The x-orientation of the top of the listener.
 * **yUp**: `Number` The y-orientation of the top of the listener.
 * **zUp**: `Number` The z-orientation of the top of the listener.
+
+
+### Group Playback
+Each `new Howl()` instance is also a group. You can play multiple sounds from the `Howl` and control them individually or as a group. For example, the following plays two sounds from a sprite, changes their volume together and then pauses both of them at the same time.
+
+```javascript
+var sound = new Howl({
+  src: ['sound.webm', 'sound.mp3'],
+  sprite: {
+    track01: [0, 20000],
+    track02: [21000, 41000]
+  }
+});
+
+// Play each of the track.s
+sound.play('track01');
+sound.play('track02');
+
+// Change the volume of both tracks.
+sound.volume(0.5);
+
+// After a second, pause both sounds in the group.
+setTimeout(function() {
+  sound.pause();
+}, 1000);
+```
 
 
 ### Mobile/Chrome Playback
